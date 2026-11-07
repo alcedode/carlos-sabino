@@ -1,1 +1,221 @@
 
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Carlos Sabino — O melhor médico, um grande irmão</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=Source+Serif+4:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--mar:#071B33;--med:#087EA4;--pet:#123B55;--br:#fff;--pr:#C7D2DC;--ou:#D5AE64}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:radial-gradient(ellipse at 50% 0,#0d3556 0,var(--mar) 60%);color:var(--br);font-family:'Source Serif 4',Georgia,serif;overflow:hidden}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:0}
+#root{position:relative;z-index:1;height:100%}
+.stage{height:100%;display:flex;align-items:center;justify-content:center;perspective:1800px;padding:12px}
+h1,h2,.bt,.nav button{font-family:'Barlow Condensed','Arial Narrow',sans-serif}
+/* capa */
+.book{position:relative;width:min(430px,90vw);height:min(610px,84dvh);transform-style:preserve-3d}
+.cover{position:absolute;inset:0;transform-origin:left center;transition:transform 1.5s cubic-bezier(.6,.05,.3,1),opacity .4s 1.1s;border-radius:4px 14px 14px 4px;
+background:repeating-linear-gradient(45deg,rgba(255,255,255,.025) 0 2px,transparent 2px 6px),linear-gradient(145deg,#0c2a4a,var(--mar) 55%,#04111f);
+box-shadow:0 30px 70px #000a,inset 6px 0 14px #0008,inset 0 0 0 1px #c7d2dc33;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:34px 28px;gap:14px}
+.cover::before{content:"";position:absolute;inset:14px;border:1px solid var(--ou);opacity:.7;border-radius:2px;pointer-events:none}
+.cover.op{transform:rotateY(-165deg);opacity:0;pointer-events:none}
+.cover h1{font-size:clamp(46px,13vw,66px);line-height:.95;letter-spacing:.04em;color:var(--br)}
+.cover .sub{color:var(--ou);letter-spacing:.14em;font-size:15px}
+.cover .fe{font-family:'Barlow Condensed',sans-serif;font-size:26px;letter-spacing:.1em;color:var(--pr)}
+.cover p{color:var(--pr);font-style:italic;font-size:16px;line-height:1.5;max-width:300px}
+.bt{background:linear-gradient(var(--ou),#b98f45);color:var(--mar);border:0;padding:13px 26px;font-size:18px;font-weight:700;letter-spacing:.1em;cursor:pointer;border-radius:2px;box-shadow:0 0 22px #d5ae6455}
+.bt:hover{filter:brightness(1.1)}
+button:focus-visible{outline:2px solid var(--med);outline-offset:3px}
+/* leitor */
+.rd{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:12px;perspective:2000px}
+.sheet{width:min(1020px,95vw);height:min(640px,80dvh);background:linear-gradient(135deg,#0b2a47,var(--pet) 60%,#0a2540);border:1px solid #c7d2dc40;border-radius:6px;box-shadow:0 30px 80px #000a,0 0 60px #087ea41f,inset 0 0 0 8px #071b3380,inset 0 0 0 9px #d5ae6455;transform-origin:left center;animation:vn .9s both;overflow:auto;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:34px;padding:48px}
+.sheet.pv{transform-origin:right center;animation-name:vp}
+.sheet.rev .foto{order:2}
+.sheet.solo{grid-template-columns:1fr;max-width:760px;text-align:center}
+@keyframes vn{from{transform:rotateY(-80deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes vp{from{transform:rotateY(80deg);opacity:0}to{transform:none;opacity:1}}
+.tx h2{font-size:clamp(34px,5.2vw,58px);line-height:1;letter-spacing:.03em;margin-bottom:6px;font-weight:700}
+.rule{width:64px;height:2px;background:var(--ou);margin:16px 0 20px;box-shadow:0 0 12px var(--ou)}
+.solo .rule{margin:16px auto 20px}
+.tx p{font-size:clamp(15px,1.9vw,18px);line-height:1.65;color:#e6edf3;margin-bottom:11px;max-width:60ch}
+.solo .tx p{margin-left:auto;margin-right:auto}
+.tx p.em{color:var(--ou);font-style:italic}
+.tx .ass{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;letter-spacing:.08em;color:var(--ou);margin-top:18px}
+.foto{position:relative;aspect-ratio:4/5;max-height:100%;width:100%;max-width:400px;justify-self:center;padding:10px;background:linear-gradient(145deg,var(--ou),#8a6a30 50%,var(--ou));box-shadow:0 14px 40px #000a,0 0 40px #087ea455}
+.foto img,.ph{width:100%;height:100%;object-fit:cover;display:block;border:2px solid var(--mar)}
+.ph{background:repeating-linear-gradient(45deg,#0d3556 0 10px,#0a2c49 10px 20px);color:var(--pr);font-family:'Barlow Condensed',sans-serif;font-size:26px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.ph small{font-family:'Source Serif 4',serif;font-size:13px;opacity:.8;padding:0 12px;text-align:center}
+.ecg{width:100%;height:60px;display:block;margin:6px 0}
+.ecg path{fill:none;stroke:var(--med);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:420;animation:ec 3.2s linear infinite;filter:drop-shadow(0 0 5px var(--med))}
+.gold .ecg path{stroke:var(--ou);filter:drop-shadow(0 0 6px var(--ou))}
+@keyframes ec{from{stroke-dashoffset:420}to{stroke-dashoffset:-420}}
+.stet{width:70px;height:auto;stroke:var(--pr);fill:none;stroke-width:3;stroke-linecap:round;margin-bottom:6px}
+.stet circle{stroke:var(--ou)}
+.nav{display:flex;align-items:center;gap:16px;width:min(1020px,95vw)}
+.nav button{background:none;border:1px solid #c7d2dc66;color:var(--br);padding:9px 18px;font-size:17px;letter-spacing:.08em;cursor:pointer;border-radius:2px}
+.nav button:disabled{opacity:.3;cursor:default}
+.nav button:not(:disabled):hover{border-color:var(--ou);color:var(--ou)}
+.prog{flex:1;height:3px;background:#c7d2dc30;border-radius:2px;overflow:hidden}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--med),var(--ou));transition:width .6s}
+.mus{position:fixed;top:12px;right:12px;z-index:5;background:#071b33cc;border:1px solid #c7d2dc55;color:var(--pr);padding:8px 14px;font-family:'Barlow Condensed',sans-serif;font-size:16px;letter-spacing:.06em;cursor:pointer;border-radius:2px}
+@media(max-width:760px){.sheet{grid-template-columns:1fr;gap:20px;padding:30px 22px;align-items:start;height:min(680px,78dvh)}.sheet .foto{order:0!important;max-width:240px}.nav button{padding:8px 12px}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}}
+</style>
+</head>
+<body>
+<canvas id="fx"></canvas>
+<div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script>
+if(!window.React||!window.ReactDOM){
+  document.write('<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"><\/script><script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"><\/script>');
+}
+</script>
+<script>
+(function(){
+var h=React.createElement,useState=React.useState,useEffect=React.useEffect,useRef=React.useRef;
+
+/* Coloque as fotos na mesma pasta deste ficheiro com estes nomes.
+   1-3: Carlos sozinho | 4-5: Alcedo e Carlos juntos.
+   Se faltar alguma, toque na moldura para escolher a imagem do telemóvel/computador. */
+var FOTOS=['foto1.jpg','foto2.jpg','foto3.jpg','foto4.jpg','foto5.jpg'];
+
+function Foto(p){
+  var a=useState(FOTOS[p.i]),src=a[0],setSrc=a[1],b=useState(true),ok=b[0],setOk=b[1],ref=useRef();
+  return h('figure',{className:'foto'},
+    ok?h('img',{src:src,alt:p.alt,onError:function(){setOk(false)}})
+      :h('button',{className:'ph',onClick:function(){ref.current.click()}},'Fotografia '+(p.i+1),h('small',null,'Toque para escolher a imagem')),
+    h('input',{type:'file',accept:'image/*',hidden:true,ref:ref,onChange:function(e){var f=e.target.files[0];if(f){setSrc(URL.createObjectURL(f));setOk(true)}}}));
+}
+
+function Ecg(){
+  return h('svg',{className:'ecg',viewBox:'0 0 400 60',preserveAspectRatio:'none','aria-hidden':true},
+    h('path',{d:'M0 30H90l8-7 8 7H150l6 6 9-30 11 50 8-26h20l9-8 9 8H400'}));
+}
+function Stet(){
+  return h('svg',{className:'stet',viewBox:'0 0 100 80','aria-hidden':true},
+    h('path',{d:'M18 6v26a22 22 0 0 0 44 0V6M40 54v10a18 18 0 0 0 36 0V58'}),h('circle',{cx:76,cy:50,r:8}));
+}
+
+var PAGES=[
+ {t:'FELIZ ANIVERSÁRIO, CARLOS!',f:0,alt:'Carlos',tx:[
+  'Hoje é um dia especial porque celebramos a vida de alguém que merece todo o reconhecimento, respeito e felicidade.',
+  'Carlos Sabino, meu amigo, meu irmão!',
+  'Que Deus te conceda muitos anos de vida, saúde, sabedoria, força e conquistas.',
+  'Que nunca te faltem motivos para sorrir, sonhos para realizar e oportunidades para crescer.',
+  'Hoje quero lembrar-te de que és uma pessoa especial e que tens um lugar importante na minha vida.',
+  ['Feliz aniversário, irmão!','em']]},
+ {t:'UM PROFISSIONAL QUE MERECE BRILHAR.',f:1,alt:'Carlos',rev:1,med:1,tx:[
+  'Que continues a ser um exemplo de dedicação, inteligência, responsabilidade e humanidade.',
+  'A medicina é mais do que uma profissão. É uma missão de cuidar, servir e transformar vidas.',
+  'Que tenhas sempre conhecimento para aprender, coragem para enfrentar desafios e um coração humano para cuidar de quem precisa.',
+  'Que o teu caminho seja marcado por grandes conquistas.',
+  ['O mundo precisa de profissionais que façam a diferença!','em']]},
+ {t:'IRMÃO, MESMO LONGE, ESTAMOS JUNTOS.',f:3,alt:'Alcedo e Carlos juntos',tx:[
+  'Existem amizades que não dependem da proximidade física.',
+  'Mesmo quando a vida nos coloca em lugares diferentes, existem laços que permanecem fortes.',
+  'A distância pode separar os nossos caminhos por alguns quilómetros, mas nunca será capaz de apagar o respeito, a consideração e a amizade que construímos.',
+  ['De Alcedo para Carlos: podes contar comigo, irmão!','em'],
+  'Estamos juntos, independentemente da distância.']},
+ {t:'AS MEMÓRIAS NÃO TÊM DISTÂNCIA.',f:4,alt:'Alcedo e Carlos juntos',rev:1,tx:[
+  'Os bons momentos tornam-se memórias, mas as verdadeiras amizades continuam a fazer parte da nossa história.',
+  'Que venham mais conquistas, mais histórias, mais gargalhadas e mais momentos para recordar.',
+  ['A vida ainda tem muita coisa boa reservada para nós!','em']]},
+ {t:'O TEU MELHOR AINDA ESTÁ POR VIR.',f:2,alt:'Carlos',tx:[
+  'Que este novo ciclo seja de crescimento, prosperidade e realizações.',
+  'Que alcances os teus objetivos profissionais, pessoais e académicos.',
+  'Que tenhas saúde para viver os teus sonhos, sabedoria para tomar boas decisões e força para ultrapassar qualquer dificuldade.',
+  ['Nunca deixes de acreditar no teu potencial.','em']]},
+ {t:'FELIZ ANIVERSÁRIO, MEU IRMÃO!',solo:1,tx:[
+  'Carlos Sabino,',
+  'Hoje celebro a tua vida e a felicidade de ter alguém como tu na minha caminhada.',
+  'Quero que saibas que, apesar da distância, continuamos juntos.',
+  'A verdadeira amizade não se mede pelos dias em que estamos fisicamente próximos, mas pela consideração, lealdade e respeito que permanecem mesmo quando estamos longe.',
+  'Desejo-te uma vida longa, cheia de saúde, sucesso, prosperidade e realizações.',
+  'Continua a ser esse homem de valor e esse profissional que tem tudo para alcançar grandes coisas.',
+  'Que Deus ilumine os teus passos e abençoe cada novo capítulo da tua vida.',
+  ['Feliz aniversário, meu amigo, meu irmão!','em']],
+  ass:['DE ALCEDO PARA CARLOS SABINO.','COM RESPEITO, ADMIRAÇÃO E AMIZADE. 🤝']}
+];
+
+function Page(p){
+  var d=p.d,cls='sheet'+(p.dir<0?' pv':'')+(d.rev?' rev':'')+(d.solo?' solo gold':'');
+  var paras=d.tx.map(function(x,i){return Array.isArray(x)?h('p',{key:i,className:'em'},x[0]):h('p',{key:i},x)});
+  var tx=h('div',{className:'tx'},
+    d.med?h(Stet):null,
+    h('h2',null,d.t),h('div',{className:'rule'}),
+    d.solo||d.med?h(Ecg):null,
+    paras,
+    d.ass?h('div',null,h('div',{className:'ass'},d.ass[0]),h('p',{style:{marginTop:6,fontSize:15,color:'#C7D2DC'}},d.ass[1])):null);
+  return h('section',{className:cls,key:p.n},d.solo?null:h(Foto,{i:d.f,alt:d.alt}),tx);
+}
+
+function useMusic(){
+  var r=useRef(null),s=useState(false),on=s[0],setOn=s[1];
+  function toggle(){
+    if(!r.current){
+      var c=new (window.AudioContext||window.webkitAudioContext)(),n=0;
+      var ch=[[220,261.6,329.6],[174.6,220,261.6],[261.6,329.6,392],[196,246.9,293.7]];
+      var play=function(){var t=c.currentTime;ch[n++%4].forEach(function(f){
+        var o=c.createOscillator(),e=c.createGain();o.type='sine';o.frequency.value=f;
+        e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime(.05,t+1.5);e.gain.linearRampToValueAtTime(0,t+4.3);
+        o.connect(e);e.connect(c.destination);o.start(t);o.stop(t+4.4)})};
+      play();r.current={c:c,play:play,id:setInterval(play,4000)};setOn(true);return;
+    }
+    var m=r.current;
+    if(on){clearInterval(m.id);m.c.suspend();setOn(false)}
+    else{m.c.resume();m.play();m.id=setInterval(m.play,4000);setOn(true)}
+  }
+  return [on,toggle];
+}
+
+function App(){
+  var a=useState(0),ph=a[0],setPh=a[1];            // 0 fechado, 1 a abrir, 2 aberto
+  var b=useState({n:0,dir:1}),pg=b[0],setPg=b[1];
+  var m=useMusic(),on=m[0],toggle=m[1];
+  var last=PAGES.length-1;
+  function go(d){setPg(function(s){var n=Math.max(0,Math.min(last,s.n+d));return n===s.n?s:{n:n,dir:d}})}
+  function abrir(){setPh(1);setTimeout(function(){setPh(2)},1700)}
+  useEffect(function(){
+    function k(e){if(ph===0)return;if(e.key==='ArrowRight')go(1);if(e.key==='ArrowLeft')go(-1)}
+    window.addEventListener('keydown',k);return function(){window.removeEventListener('keydown',k)};
+  },[ph]);
+  return h('div',{className:'stage'},
+    h('button',{className:'mus',onClick:toggle,'aria-pressed':on},on?'♪ Música: ligada':'♪ Música: desligada'),
+    ph>0?h('div',{className:'rd'},
+      h(Page,{d:PAGES[pg.n],n:pg.n,dir:pg.dir}),
+      h('div',{className:'nav'},
+        h('button',{onClick:function(){go(-1)},disabled:pg.n===0},'ANTERIOR'),
+        h('div',{className:'prog',role:'progressbar','aria-valuemin':1,'aria-valuemax':PAGES.length,'aria-valuenow':pg.n+1},
+          h('i',{style:{width:((pg.n+1)/PAGES.length*100)+'%'}})),
+        h('button',{onClick:function(){go(1)},disabled:pg.n===last},'SEGUINTE'))):null,
+    ph<2?h('div',{className:'book',style:{position:ph>0?'absolute':'relative'}},
+      h('div',{className:'cover'+(ph>0?' op':'')},
+        h(Stet),
+        h('div',{className:'sub'},'O HOMEM, O PROFISSIONAL, O IRMÃO.'),
+        h('h1',null,'CARLOS',h('br'),'SABINO'),
+        h(Ecg),
+        h('div',{className:'fe'},'FELIZ ANIVERSÁRIO!'),
+        h('p',null,'Uma homenagem de Alcedo para um irmão que a distância nunca separou.'),
+        h('button',{className:'bt',onClick:abrir},'ABRIR ESTA HOMENAGEM'))):null);
+}
+ReactDOM.createRoot(document.getElementById('root')).render(h(App));
+
+/* partículas discretas */
+var cv=document.getElementById('fx'),cx=cv.getContext('2d'),ps=[],W,H;
+function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight}
+rs();addEventListener('resize',rs);
+for(var i=0;i<45;i++)ps.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.8+.4,v:Math.random()*.35+.1,g:Math.random()<.3});
+if(!matchMedia('(prefers-reduced-motion:reduce)').matches)(function loop(){
+  cx.clearRect(0,0,W,H);
+  ps.forEach(function(p){p.y-=p.v;if(p.y<-5){p.y=H+5;p.x=Math.random()*W}
+    cx.beginPath();cx.arc(p.x,p.y,p.r,0,6.3);cx.fillStyle=p.g?'rgba(213,174,100,.55)':'rgba(8,126,164,.55)';cx.fill()});
+  requestAnimationFrame(loop)})();
+})();
+</script>
+</body>
+</html>
