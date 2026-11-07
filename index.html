@@ -26,6 +26,8 @@ box-shadow:0 30px 70px #000a,inset 6px 0 14px #0008,inset 0 0 0 1px #c7d2dc33;di
 .cover .fe{font-family:'Barlow Condensed',sans-serif;font-size:26px;letter-spacing:.1em;color:var(--pr)}
 .cover p{color:var(--pr);font-style:italic;font-size:16px;line-height:1.5;max-width:300px}
 .bt{background:linear-gradient(var(--ou),#b98f45);color:var(--mar);border:0;padding:13px 26px;font-size:18px;font-weight:700;letter-spacing:.1em;cursor:pointer;border-radius:2px;box-shadow:0 0 22px #d5ae6455;transition:filter .3s,transform .3s}
+.lk{background:none;border:0;color:var(--pr);font-family:'Source Serif 4',Georgia,serif;font-size:14px;text-decoration:underline;cursor:pointer}
+.lk:hover{color:var(--ou)}
 .bt:hover{filter:brightness(1.1);transform:translateY(-1px)}
 button:focus-visible{outline:2px solid var(--med);outline-offset:3px}
 /* leitor */
@@ -106,9 +108,9 @@ var FOTOS=[
 ];
 
 function Foto(p){
-  var a=useState(FOTOS[p.i]),src=a[0],setSrc=a[1],b=useState(true),ok=b[0],setOk=b[1],ref=useRef();
+  var a=useState(p.src||encodeURI(FOTOS[p.i])),src=a[0],setSrc=a[1],b=useState(true),ok=b[0],setOk=b[1],ref=useRef();
   return h('figure',{className:'foto'},
-    ok?h('img',{src:encodeURI(src),alt:p.alt,onError:function(){setOk(false)}})
+    ok?h('img',{src:src,alt:p.alt,onError:function(){setOk(false)}})
       :h('button',{className:'ph',onClick:function(){ref.current.click()}},'Fotografia '+(p.i+1),h('small',null,'Toque para escolher a imagem')),
     h('input',{type:'file',accept:'image/*',hidden:true,ref:ref,onChange:function(e){var f=e.target.files[0];if(f){setSrc(URL.createObjectURL(f));setOk(true)}}}));
 }
@@ -162,6 +164,12 @@ var PAGES=[
   ass:['DE ALCEDO PARA CARLOS SABINO.','COM RESPEITO, ADMIRAÇÃO E AMIZADE. 🤝']}
 ];
 
+/* identifica a foto pelo nome ou pela hora (22.21.33), ignorando às/na/em */
+function tk(n){
+  n=n.replace(/\.[a-z]+$/i,'').replace(/\d{4}-\d{2}-\d{2}/,'');
+  var m=n.match(/(\d{2})[.:](\d{2})[.:](\d{2})(?:\s*\((\d+)\))?/);
+  return m?m[1]+m[2]+m[3]+(m[4]?'_'+m[4]:''):n.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'');
+}
 /* ajusta o tamanho do texto para caber sempre, sem rolagem */
 function fit(el){
   var fs=20;el.style.setProperty('--fs',fs+'px');
@@ -184,7 +192,7 @@ function Page(p){
     d.solo?h(Ecg):null,
     paras,
     d.ass?h('div',null,h('div',{className:'ass'},d.ass[0]),h('p',null,d.ass[1])):null);
-  return h('section',{className:cls,ref:el,style:{'--d':p.dir}},d.solo?null:h(Foto,{i:d.f,alt:d.alt}),tx);
+  return h('section',{className:cls,ref:el,style:{'--d':p.dir}},d.solo?null:h(Foto,{key:(p.fotos&&p.fotos[d.f])||'x',i:d.f,alt:d.alt,src:p.fotos&&p.fotos[d.f]}),tx);
 }
 
 function useMusic(){
@@ -209,6 +217,18 @@ function useMusic(){
 function App(){
   var a=useState(0),ph=a[0],setPh=a[1];
   var b=useState({n:0,prev:null,dir:0,k:0}),pg=b[0],setPg=b[1];
+  var fo=useState([]),fotos=fo[0],setFotos=fo[1],inp=useRef();
+  function carregar(files){
+    var out=fotos.slice(),rest=[];
+    Array.prototype.forEach.call(files,function(fl){
+      var hit=false;
+      FOTOS.forEach(function(n,i){if(!hit&&!out[i]&&tk(fl.name)===tk(n)){out[i]=URL.createObjectURL(fl);hit=true}});
+      if(!hit)rest.push(fl);
+    });
+    rest.forEach(function(fl){for(var i=0;i<FOTOS.length;i++){if(!out[i]){out[i]=URL.createObjectURL(fl);break}}});
+    setFotos(out);
+  }
+  var nf=fotos.filter(Boolean).length;
   var m=useMusic(),on=m[0],toggle=m[1],last=PAGES.length-1,kr=useRef(0);
   function go(d){
     setPg(function(s){
@@ -227,8 +247,8 @@ function App(){
     h('button',{className:'mus',onClick:toggle,'aria-pressed':on},on?'♪ Música: ligada':'♪ Música: desligada'),
     ph>0?h('div',{className:'rd'},
       h('div',{className:'stack'},
-        pg.prev!==null?h(Page,{key:'o'+pg.k,d:PAGES[pg.prev],dir:pg.dir,out:1}):null,
-        h(Page,{key:'n'+pg.n,d:PAGES[pg.n],dir:pg.dir})),
+        pg.prev!==null?h(Page,{key:'o'+pg.k,d:PAGES[pg.prev],dir:pg.dir,out:1,fotos:fotos}):null,
+        h(Page,{key:'n'+pg.n,d:PAGES[pg.n],dir:pg.dir,fotos:fotos})),
       h('div',{className:'nav'},
         h('button',{onClick:function(){go(-1)},disabled:pg.n===0},'ANTERIOR'),
         h('div',{className:'prog',role:'progressbar','aria-valuemin':1,'aria-valuemax':PAGES.length,'aria-valuenow':pg.n+1},
@@ -243,7 +263,9 @@ function App(){
         h(Ecg),
         h('div',{className:'fe'},'FELIZ ANIVERSÁRIO!'),
         h('p',null,'Uma homenagem de Alcedo para um irmão que a distância nunca separou.'),
-        h('button',{className:'bt',onClick:abrir},'ABRIR ESTA HOMENAGEM'))):null);
+        h('button',{className:'bt',onClick:abrir},'ABRIR ESTA HOMENAGEM'),
+        h('button',{className:'lk',onClick:function(){inp.current.click()}},nf?('Fotografias carregadas: '+nf+' de '+FOTOS.length+' (tocar para alterar)'):'Carregar as fotografias'),
+        h('input',{type:'file',accept:'image/*',multiple:true,hidden:true,ref:inp,onChange:function(e){carregar(e.target.files)}}))):null);
 }
 ReactDOM.createRoot(document.getElementById('root')).render(h(App));
 
